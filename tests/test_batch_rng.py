@@ -12,10 +12,49 @@ def make_batch_generator(n=2):
         for i in range(n)
     ])
 
-# I don't know what these results for any of these tests are supposed to be *a 
-# priori*; I just ran the code once and copied the results.  But I do know that 
-# the code should be deterministic, so the results should be the same every 
-# time.
+
+def test_batch_generator_mock():
+
+    class MockGenerator:
+
+        def __init__(self, x):
+            self.x = x
+
+        def get(self):
+            return self.x
+
+    bg = BatchGenerator([
+        MockGenerator(0),
+        MockGenerator(1),
+        MockGenerator(2),
+    ])
+
+    assert_close(
+            bg.get(),
+            tensor([0, 1, 2]),
+    )
+
+def test_batch_generator_pickle():
+    bg = make_batch_generator()
+
+    import pickle
+    bg_packed = pickle.dumps(bg)
+    bg_unpacked = pickle.loads(bg_packed)
+
+    assert_close(
+            bg.uniform(),
+            bg_unpacked.uniform(),
+    )
+
+def test_batch_generator_err_unknown_method():
+    bg = make_batch_generator()
+    with raises(AttributeError):
+        bg.unknown_method()
+
+# I don't know what the results for any of the following tests are supposed to 
+# be *a priori*; I just ran the code once and copied the results.  But I do 
+# know that the code should be deterministic, so the results should be the same 
+# every time.
 
 def test_batch_generator_integers():
     bg = make_batch_generator()
@@ -62,10 +101,4 @@ def test_batch_generator_3d():
                  [2, 3, 8, 4]],
             ]),
     )
-
-def test_batch_generator_err_unknown_method():
-    bg = make_batch_generator()
-    with raises(AttributeError):
-        bg.unknown_method()
-
 
