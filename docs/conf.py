@@ -20,6 +20,7 @@ nitpicky = True
 
 extensions = [
         'autoclasstoc',
+        'myst_parser',
         'sphinx.ext.autodoc',
         'sphinx.ext.autosummary',
         'sphinx.ext.viewcode',
@@ -32,7 +33,7 @@ intersphinx_mapping = {
 }
 autosummary_generate = True
 autodoc_default_options = {
-        'exclude-members': '__dict__,__weakref__,__module__',
+        'exclude-members': '__dict__,__weakref__,__module__,__annotations__',
 }
 html_theme = 'sphinx_rtd_theme'
 pygments_style = 'sphinx'
